@@ -1,12 +1,19 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
+/*
+    16 bit Serial to Parallel converter
+    First bit coming through serial input will be in MSB
+    Last bit coming through serial input will be in LSB
+*/
+
 entity S_P is
     Port (
-        serial_in : in STD_LOGIC;
+        enable : in STD_LOGIC;
         clk : in STD_LOGIC;
-        read_write : in STD_LOGIC;
-        parallel_output : out STD_LOGIC_VECTOR(15 downto 0)
+        input : in STD_LOGIC;
+        mode : in STD_LOGIC;
+        output : out STD_LOGIC_VECTOR(15 downto 0)
     );
 end S_P;
 
@@ -15,12 +22,14 @@ architecture Behavioral of S_P is
 begin
     process(clk)
     begin
-        if rising_edge(clk) then
-            if read_write = '1' then -- Reads the incoming bits in serian input if read_write is '1'
-                shift_register <= shift_register(14 downto 0) & serial_in; -- Shift the data in the shift register
-            else
-                -- Output the parallel data if read_write is '0'
-                parallel_output <= shift_register;
+        if enable = '1' then    --Enables module operation
+            if rising_edge(clk) then
+                if mode = '1' then -- Reads the incoming bits in serial input if mode is '1'
+                    shift_register <= shift_register(14 downto 0) & input; -- Shift the data in the shift register
+                else
+                    -- Output the parallel data if mode is '0'
+                    output <= shift_register;
+                end if;
             end if;
         end if;
     end process;

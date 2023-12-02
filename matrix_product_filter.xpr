@@ -3,7 +3,7 @@
 <!--                                                         -->
 <!-- Copyright 1986-2015 Xilinx, Inc. All Rights Reserved.   -->
 
-<Project Version="7" Minor="10" Path="D:/Estudos/UERGS/2023.2/Fundamentos de Circuitos Integrados/Projetos Vivado/matrix_product_filter/matrix_product_filter.xpr">
+<Project Version="7" Minor="10" Path="/home/doidobr/Documents/matrix_product_filter/matrix_product_filter.xpr">
   <DefaultLaunch Dir="$PRUNDIR"/>
   <Configuration>
     <Option Name="Id" Val="79fb3cf91b654d40ae03cd7535865002"/>
@@ -37,7 +37,7 @@
       </File>
       <Config>
         <Option Name="DesignMode" Val="RTL"/>
-        <Option Name="TopModule" Val="SerialToParallelConverter"/>
+        <Option Name="TopModule" Val="S_P"/>
         <Option Name="TopAutoSet" Val="TRUE"/>
       </Config>
     </FileSet>
@@ -84,9 +84,6 @@
     </Simulator>
     <Simulator Name="Riviera">
       <Option Name="Description" Val="Riviera-PRO Simulator"/>
-    </Simulator>
-    <Simulator Name="ActiveHDL">
-      <Option Name="Description" Val="Active-HDL Simulator"/>
     </Simulator>
   </Simulators>
   <Runs Version="1" Minor="10">

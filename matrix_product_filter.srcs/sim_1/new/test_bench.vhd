@@ -7,7 +7,7 @@ end test_bench;
 architecture Behavioural of test_bench is
     constant clk_period : time := 1 ns;
     signal clk, x_serial_in, x_read_write : std_logic := '0';
-    signal X_S_P_output : STD_LOGIC_VECTOR(15 downto 0);
+    signal X0_X1 : STD_LOGIC_VECTOR(15 downto 0);
     
 
     component S_P
@@ -26,7 +26,7 @@ begin
             clk => clk,
             serial_in => x_serial_in,
             read_write => x_read_write,
-            parallel_output => X_S_P_output
+            parallel_output => X0_X1
         );
 
     -- Clock

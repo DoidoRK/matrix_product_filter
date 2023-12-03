@@ -24,7 +24,7 @@ entity filtering_core is
 end filtering_core;
 
 architecture Behavioral of filtering_core is
-    signal SP_output : std_logic_vector(15 downto 0) := (others => '0');
+    signal SP_output, MP_output : std_logic_vector(15 downto 0) := (others => '0');
 
 begin
     S_P: entity work.S_P
@@ -37,12 +37,21 @@ begin
         SP_output
     );
 
+    M_P: entity work.matrix_processor
+    port map (
+        reset,
+        MP_enable,
+        clk,
+        SP_output,
+        MP_output
+    );
+
     P_S: entity work.P_S
     port map (
         reset,
         PS_enable,
         clk,
-        SP_output,
+        MP_output,
         PS_mode,
         output
     );

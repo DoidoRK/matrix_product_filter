@@ -30,13 +30,12 @@ architecture Behavioral of filter_system is
     
 begin
     SP_converter: entity work.S_P port map (reset,sp_enable,clk,input,mode,sp_output);
-    matrix_processor: entity work.matrix_processor port map(reset,clk,sp_output,ps_input);
+    matrix_processor: entity work.matrix_processor port map(reset,matrix_processor_enable,clk,sp_output,ps_input);
     PS_converter: entity work.P_S port map (reset,ps_enable,ps_input,clk,mode,output);
-
+    
     process(clk)
     begin
         if reset = '1' then
-
             counter <= '0';
             ps_enable <= '0';
             sp_enable <= '0';
@@ -44,11 +43,11 @@ begin
             mode <= '0';
             sp_output <= (others => '0');
             ps_input <= (others => '0');
-
-        elsif rising_edge(clk) then
-            -- Increment counter
-            COUNTER <= (COUNTER + 1) mod 37;
-            -- Sequential operation
+        elsif enable = '1' then
+            elsif rising_edge(clk) then
+                -- Increment counter
+                COUNTER <= (COUNTER + 1) mod 37;
+                -- Sequential operation
             if counter > 0 and counter < 16 then
                 -- 16 clocks to read input serially
                 sp_enable <= '1';

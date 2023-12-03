@@ -1,11 +1,33 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-/*
-    16 bit Parallel to Serial converter
-    First bit sended through serial output will be MSB
-    Last bit sended through serial output will be LSB
-    Output starts from MSB and goes down to LSB
-*/
+
+----------------------------------------------------------------------------------
+-- 16 bit Parallel to Serial converter
+-- First bit sended through serial output will be MSB
+-- Last bit sended through serial output will be LSB
+-- Output starts from MSB and goes down to LSB
+
+-- INPUT
+-- ┌   ┐ 
+-- │ 0 │
+-- │ 0 │
+-- │ 0 │
+-- │ 0 │
+-- │ 0 │
+-- │ 1 │         OUTPUT
+-- │ 0 │ => 0101000010100000
+-- │ 1 │
+-- │ 0 │
+-- │ 0 │
+-- │ 0 │
+-- │ 0 │
+-- │ 1 │
+-- │ 0 │
+-- │ 1 │
+-- │ 0 │
+-- └   ┘   
+----------------------------------------------------------------------------------
+
 entity P_S is
     Port (
         enable : in STD_LOGIC;

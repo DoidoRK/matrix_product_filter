@@ -3,8 +3,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 ----------------------------------------------------------------------------------
 -- 16 bit Parallel to Serial converter
--- First bit sended through serial output will be MSB
--- Last bit sended through serial output will be LSB
+-- First bit sended through serial output will be LSB
+-- Last bit sended through serial output will be MSB
 -- Output starts from MSB and goes down to LSB
 
 -- INPUT
@@ -14,10 +14,10 @@ use IEEE.STD_LOGIC_1164.ALL;
 -- │ 0 │
 -- │ 0 │
 -- │ 0 │
--- │ 1 │         OUTPUT
--- │ 0 │ => 0101000010100000
--- │ 1 │
--- │ 0 │
+-- │ 1 │ 
+-- │ 0 │ 
+-- │ 1 │          OUTPUT
+-- │ 0 │ =>  00000101 00001010
 -- │ 0 │
 -- │ 0 │
 -- │ 0 │
@@ -35,7 +35,7 @@ entity P_S is
         clk : in STD_LOGIC;
         input : in STD_LOGIC_VECTOR(15 downto 0);
         mode : in STD_LOGIC;
-        output : out STD_LOGIC
+        output : out STD_LOGIC := '0'
     );
 end P_S;
 

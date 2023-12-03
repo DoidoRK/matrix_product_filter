@@ -29,6 +29,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity S_P is
     Port (
+        reset  : in STD_LOGIC;
         enable : in STD_LOGIC;
         clk : in STD_LOGIC;
         input : in STD_LOGIC;
@@ -42,7 +43,10 @@ architecture Behavioral of S_P is
 begin
     process(clk)
     begin
-        if enable = '1' then    --Enables module operation
+        if reset = '1' then
+            -- Reset values on reset signal
+            shift_register <= (others => '0');
+        elsif enable = '1' then    --Enables module operation
             if rising_edge(clk) then
                 if mode = '1' then -- Reads the incoming bits in serial input if mode is '1'
                     shift_register <= shift_register(14 downto 0) & input; -- Shift the data in the shift register

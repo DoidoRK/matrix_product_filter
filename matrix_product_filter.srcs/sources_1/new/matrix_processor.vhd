@@ -24,6 +24,7 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity matrix_processor is
     Port (
+        reset  : in STD_LOGIC;
         enable : in STD_LOGIC;
         clk :  in STD_LOGIC;
         input : in STD_LOGIC_VECTOR (15 downto 0);
@@ -39,17 +40,23 @@ architecture Behavioral of matrix_processor is
     constant C3 : STD_LOGIC_VECTOR(7 downto 0) := "00000100";
     signal A, B : STD_LOGIC_VECTOR(7 downto 0);
     signal TEMP0, TEMP1 : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
-    signal counter : INTEGER range 0 to 2 := 0;
+    signal COUNTER : INTEGER range 0 to 2 := 0;
 begin
-
     process(clk)
     begin
-        if enable = '1' then    --Enables module operation
-            if rising_edge(clk) then
+        if reset = '1' then
+            -- Reset values on reset signal
+            A <= (others => '0');
+            B <= (others => '0');
+            TEMP0 <= (others => '0');
+            TEMP1 <= (others => '0');
+            COUNTER <= 0;
+        elsif enable = '1' then
+            if  rising_edge(clk) then
                 -- Increment the counter at each rising edge
-                    counter <= (counter + 1) mod 3;
+                    COUNTER <= (COUNTER + 1) mod 3;
                 -- Depending on the counter value, perform different steps
-                case counter is
+                case COUNTER is
                     when 0 =>
                         -- 1st clock: Get A and B inputs from parallel input
                         A <= input(15 downto 8);

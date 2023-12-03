@@ -42,7 +42,7 @@ architecture Behavioral of matrix_processor is
     signal TEMP0, TEMP1 : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
     signal COUNTER : INTEGER range 0 to 2 := 0;
 begin
-    process(clk)
+    process(clk, reset)
     begin
         if reset = '1' then
             -- Reset values on reset signal

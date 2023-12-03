@@ -41,7 +41,7 @@ end S_P;
 architecture Behavioral of S_P is
     signal shift_register : STD_LOGIC_VECTOR(15 downto 0) := (others => '0');
 begin
-    process(clk)
+    process(clk, reset)
     begin
         if reset = '1' then
             -- Reset values on reset signal

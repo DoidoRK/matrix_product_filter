@@ -6,65 +6,75 @@ end test_bench;
 
 architecture Behavioural of test_bench is
     constant clk_period : time := 1 ns;
-    --A receives 05, --B receives 06
-    signal serial_input_register : STD_LOGIC_VECTOR(15 downto 0) := "0000011000000101";
+    signal clk, reset, input, output, SP_enable, MP_enable, PS_enable, SP_mode, PS_mode  : STD_LOGIC := '0';
+    signal serial_input_register : STD_LOGIC_VECTOR(15 downto 0) := "0000010100000110"; --A = 5, B = 6
     signal serial_output_value_register : STD_LOGIC_VECTOR(15 downto 0) := (others => '0');
-    signal reset : STD_LOGIC := '0';
-    signal clk  : STD_LOGIC := '0';
-    signal enable: STD_LOGIC := '0';
-    signal input : STD_LOGIC := '0';   --For serial in
-    signal output : STD_LOGIC := '0';  --For serial out
 
-    component filter_system
-        Port (
-            clk     : in STD_LOGIC;
-            enable  : in STD_LOGIC;
-            input   : in STD_LOGIC;
-            reset   : in STD_LOGIC;
-            output  : out STD_LOGIC
-        );
+    component filtering_core is
+        port (
+            clk                     : in  STD_LOGIC;
+            reset                   : in  STD_LOGIC;
+            SP_enable               : in  STD_LOGIC;
+            MP_enable               : in  STD_LOGIC;
+            PS_enable               : in  STD_LOGIC;
+            SP_mode                 : in  STD_LOGIC;
+            PS_mode                 : in  STD_LOGIC;
+            input                   : in  STD_LOGIC;
+            output                  : out STD_LOGIC
+          );
     end component;
 
 begin
-    UUT: filter_system
+    UUT: filtering_core
         port map (
             clk => clk,
-            enable => enable,
-            input => input,
             reset => reset,
+            SP_enable => SP_enable,
+            MP_enable => MP_enable,
+            PS_enable => PS_enable,
+            SP_mode => SP_mode,
+            PS_mode => PS_mode,
+            input => input,
             output => output
         );
-        
+
     -- Clock
     clk <= not clk after clk_period / 2;
 
-    -- Serial input proccesss
+    -- Serial input processs
+    -- The input data comes from a shift register to better visualize the input data stream
     process
     begin
-        -- wait for 2*clk_period;
         wait for clk_period;
         input <= serial_input_register(15);
         serial_input_register <= serial_input_register(14 downto 0) & '0'; -- To visualize input data stream
     end process;
+    
+    
+    -- Filtering Core simulus process
+    process
+    begin
+        SP_enable <= '1';    --Starts Serial to parallel conversor enabled
+        SP_mode <= '1';  --Set to read serial input
+        wait for clk_period*17;	--Waits for 16 bits
+        SP_mode <= '0';  --Set to write parallel output
+        wait for clk_period;
+        SP_enable <= '0';
+        --Enables PS
+        PS_enable <= '1';    --Starts Serial to parallel conversor enabled
+        PS_mode <= '1';  --Set to read parallel input
+        wait for clk_period;
+        PS_mode <= '0';  --Set to write serial output
+        wait for clk_period*16;
+        PS_enable <= '0';
+        wait;
+    end process;
 
-    -- Filter System flags proccess
+    -- Serial output processs
+    -- The output data is thrown to a shift register to better visualize the output data stream
     process
     begin
         wait for clk_period;
-        reset <= '1';   --Starts reseting the filter.
-        wait for clk_period;
-        reset <= '0';   --Disables reset.
-        enable <= '1';  --Enables filtering system.
-        wait for 36*clk_period;
-        enable <= '0';
+        serial_output_value_register <=  output & serial_output_value_register(15 downto 1);-- To visualize output data stream
     end process;
-
-    -- Serial output proccesss
-    process
-    begin
-        -- wait for 2*clk_period; --Waits for 23 clocks
-        wait for clk_period;
-        serial_output_value_register <=  serial_output_value_register(14 downto 0) & output;-- To visualize output data stream
-    end process;
-
 end Behavioural;

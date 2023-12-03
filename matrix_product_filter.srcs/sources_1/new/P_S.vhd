@@ -32,8 +32,8 @@ entity P_S is
     Port (
         reset  : in STD_LOGIC;
         enable : in STD_LOGIC;
-        input : in STD_LOGIC_VECTOR(15 downto 0);
         clk : in STD_LOGIC;
+        input : in STD_LOGIC_VECTOR(15 downto 0);
         mode : in STD_LOGIC;
         output : out STD_LOGIC
     );

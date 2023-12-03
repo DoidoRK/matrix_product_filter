@@ -11,6 +11,8 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity filter_system is
     port (
@@ -25,24 +27,44 @@ end filter_system;
 architecture Behavioral of filter_system is
     signal counter              : INTEGER range 0 to 36 := 0;
     signal sp_enable, matrix_processor_enable, ps_enable : STD_LOGIC;
-    signal sp_output, ps_input  : STD_LOGIC_VECTOR(15 downto 0);
+    signal sp_output, ps_input  : STD_LOGIC_VECTOR(15 downto 0) := (others => '0');
     signal mode                 : STD_LOGIC;
     
 begin
-    SP_converter: entity work.S_P port map (reset,sp_enable,clk,input,mode,sp_output);
-    matrix_processor: entity work.matrix_processor port map(reset,matrix_processor_enable,clk,sp_output,ps_input);
-    PS_converter: entity work.P_S port map (reset,ps_enable,ps_input,clk,mode,output);
+    S_P: entity work.S_P
+        port map (
+            reset,
+            sp_enable,
+            clk,
+            input,
+            mode,
+            sp_output
+        );
+    matrix_processor: entity work.matrix_processor
+        port map(
+            reset,
+            matrix_processor_enable,
+            clk,
+            sp_output,
+            ps_input
+        );
+    P_S: entity work.P_S port map (
+        reset,
+        ps_enable,
+        clk,
+        ps_input,
+        mode,
+        output
+    );
     
     process(clk)
     begin
         if reset = '1' then
-            counter <= '0';
+            counter <= 0;
             ps_enable <= '0';
             sp_enable <= '0';
             matrix_processor_enable <= '0';
             mode <= '0';
-            sp_output <= (others => '0');
-            ps_input <= (others => '0');
         elsif enable = '1' then
             elsif rising_edge(clk) then
                 -- Increment counter

@@ -6,44 +6,65 @@ end test_bench;
 
 architecture Behavioural of test_bench is
     constant clk_period : time := 1 ns;
-    signal clk  : std_logic := '0';
-    signal enable: std_logic := '0';
-    signal input : std_logic_vector(15 downto 0) := (others => '0');
-    signal output : std_logic_vector(15 downto 0);
+    --A receives 05, --B receives 06
+    signal serial_input_register : STD_LOGIC_VECTOR(15 downto 0) := "0000011000000101";
+    signal serial_output_value_register : STD_LOGIC_VECTOR(15 downto 0) := (others => '0');
+    signal reset : STD_LOGIC := '0';
+    signal clk  : STD_LOGIC := '0';
+    signal enable: STD_LOGIC := '0';
+    signal input : STD_LOGIC := '0';   --For serial in
+    signal output : STD_LOGIC := '0';  --For serial out
 
-    component matrix_processor
+    component filter_system
         Port (
-            enable : in STD_LOGIC;
-            clk : in STD_LOGIC;
-            input : in STD_LOGIC_VECTOR(15 downto 0);
-            output : out STD_LOGIC_VECTOR(15 downto 0)
+            clk     : in STD_LOGIC;
+            enable  : in STD_LOGIC;
+            input   : in STD_LOGIC;
+            reset   : in STD_LOGIC;
+            output  : out STD_LOGIC
         );
     end component;
 
 begin
-    UUT: matrix_processor
+    UUT: filter_system
         port map (
-            enable => enable,
             clk => clk,
+            enable => enable,
             input => input,
+            reset => reset,
             output => output
         );
-
+        
     -- Clock
     clk <= not clk after clk_period / 2;
 
-
-    -- Stimulus process
+    -- Serial input proccesss
     process
     begin
-        enable <= '1';  -- Enable the matrix processor
-        -- Loads Values into A and B
-        input(15 downto 8) <= "00000101";  -- A = 5
-        input(7 downto 0) <=  "00000110";  -- B = 6
-        -- Wait for the simulation to finish
-        wait for 3*clk_period;
-        enable <= '0';  -- Disable the matrix processor
-        wait;
+        -- wait for 2*clk_period;
+        wait for clk_period;
+        input <= serial_input_register(15);
+        serial_input_register <= serial_input_register(14 downto 0) & '0'; -- To visualize input data stream
     end process;
 
-end Behavioural; 
+    -- Filter System flags proccess
+    process
+    begin
+        wait for clk_period;
+        reset <= '1';   --Starts reseting the filter.
+        wait for clk_period;
+        reset <= '0';   --Disables reset.
+        enable <= '1';  --Enables filtering system.
+        wait for 36*clk_period;
+        enable <= '0';
+    end process;
+
+    -- Serial output proccesss
+    process
+    begin
+        -- wait for 2*clk_period; --Waits for 23 clocks
+        wait for clk_period;
+        serial_output_value_register <=  serial_output_value_register(14 downto 0) & output;-- To visualize output data stream
+    end process;
+
+end Behavioural;

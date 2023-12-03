@@ -77,7 +77,6 @@
         <Option Name="DesignMode" Val="RTL"/>
         <Option Name="TopModule" Val="test_bench"/>
         <Option Name="TopLib" Val="xil_defaultlib"/>
-        <Option Name="TopAutoSet" Val="TRUE"/>
         <Option Name="SrcSet" Val="sources_1"/>
         <Option Name="xsim.simulate.runtime" Val="50ns"/>
       </Config>

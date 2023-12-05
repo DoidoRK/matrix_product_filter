@@ -70,10 +70,10 @@ begin
             b1 => b1,
             b2 => b2,
             b3 => b3,
-            core_0_input => x,
-            core_0_output => y,
-            core_1_input => h,
-            core_1_output => g
+            core_0_input => core_0_input,
+            core_0_output => core_0_output,
+            core_1_input => core_1_input,
+            core_1_output => core_1_output
         );
 
     -- Clock

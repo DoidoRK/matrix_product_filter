@@ -18,6 +18,10 @@ entity filtering_core is
         PS_enable               : in  STD_LOGIC;
         SP_mode                 : in  STD_LOGIC;
         PS_mode                 : in  STD_LOGIC;
+        c0                      : in STD_LOGIC_VECTOR(7 downto 0);
+        c1                      : in STD_LOGIC_VECTOR(7 downto 0);
+        c2                      : in STD_LOGIC_VECTOR(7 downto 0);
+        c3                      : in STD_LOGIC_VECTOR(7 downto 0);
         input                   : in  STD_LOGIC;
         output                  : out STD_LOGIC
       );
@@ -42,6 +46,10 @@ begin
         reset,
         MP_enable,
         clk,
+        c0,
+        c1,
+        c2,
+        c3,
         SP_output,
         MP_output
     );

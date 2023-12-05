@@ -6,7 +6,7 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 ----------------------------------------------------------------------------------
 -- Matrix Processor.
 -- Performs the following operation:
--- ┌           ┐   ┌     ┐       ┌               ┐       ┌        ┐
+-- ┌           �?   ┌     �?       ┌               �?       ┌        �?
 -- │  C0  C1   │   │  A  │       │ (A*C0 + B*C1) │       │  OUT0  │
 -- │           │ * │     │ * K = │               │ * K = │        │
 -- │  C2  C3   │   │  B  │       │ (A*C2 + B*C3) │       │  OUT1  │
@@ -18,8 +18,6 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 --  * Most significant byte is OUT0 value
 --  * Least significant byte is OUT1 value
 -- K = 1/sqrt(2) = 1011010100000100
---  C0 = 12     C1 =  6
---  C2 =  4     C2 = 15
 ----------------------------------------------------------------------------------
 
 entity matrix_processor is
@@ -27,17 +25,17 @@ entity matrix_processor is
         reset  : in STD_LOGIC;
         enable : in STD_LOGIC;
         clk :  in STD_LOGIC;
+        C0 : in STD_LOGIC_VECTOR(7 downto 0);
+        C1 : in STD_LOGIC_VECTOR(7 downto 0);
+        C2 : in STD_LOGIC_VECTOR(7 downto 0);
+        C3 : in STD_LOGIC_VECTOR(7 downto 0);
         input : in STD_LOGIC_VECTOR (15 downto 0);
         output: out STD_LOGIC_VECTOR (15 downto 0)
     );
 end matrix_processor;
 
 architecture Behavioral of matrix_processor is
-    constant K : STD_LOGIC_VECTOR(15 downto 0) := "1011010100000100";
-    constant C0 : STD_LOGIC_VECTOR(7 downto 0) := "00000001";
-    constant C1 : STD_LOGIC_VECTOR(7 downto 0) := "00000010";
-    constant C2 : STD_LOGIC_VECTOR(7 downto 0) := "00000011";
-    constant C3 : STD_LOGIC_VECTOR(7 downto 0) := "00000100";
+    constant K : STD_LOGIC_VECTOR(15 downto 0) := "1011010100000100";   -- 1/sqrt(2)
     signal A, B : STD_LOGIC_VECTOR(7 downto 0);
     signal TEMP0, TEMP1 : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
     signal COUNTER : INTEGER range 0 to 2 := 0;
